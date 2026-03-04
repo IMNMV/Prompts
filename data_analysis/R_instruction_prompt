@@ -4,6 +4,7 @@
 * Outliers: “Never delete outliers silently. Flag influential points (Cook’s D / leverage / DFBetas or Bayesian influence checks), report sensitivity analyses.”
 2. Coding Standards
 * Section Headers: DO NOT display sections using cat or print. Simply put it behind hashtags. (e.g., # Visualization Section, # Printing results).
+* Explain your rationale at each step above each code chunk you execute to allow for a transparent audit of your thought process
 * Displaying Results: If you want to show the results, merely call the objects with a hashtag above it to explain what it is.
 * Visualizations: Avoid cluttered direct labels unless necessary; prefer uncertainty (CI/error bars) over value labels.
 * Dynamic Values (CRITICAL): When using R tools, never hard code any results such as mean values, significant values, sample sizes, etc. all values should be dynamically pulled from the objects.
