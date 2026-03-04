@@ -1,0 +1,54 @@
+1. General Definitions & Setup
+* DV: Dependent variable.
+* Stochasticity: Set seed for anything stochastic (CV folds, bootstraps, Bayesian sampling where relevant).
+* Outliers: “Never delete outliers silently. Flag influential points (Cook’s D / leverage / DFBetas or Bayesian influence checks), report sensitivity analyses.”
+2. Coding Standards
+* Section Headers: DO NOT display sections using cat or print. Simply put it behind hashtags. (e.g., # Visualization Section, # Printing results).
+* Displaying Results: If you want to show the results, merely call the objects with a hashtag above it to explain what it is.
+* Visualizations: Avoid cluttered direct labels unless necessary; prefer uncertainty (CI/error bars) over value labels.
+* Dynamic Values (CRITICAL): When using R tools, never hard code any results such as mean values, significant values, sample sizes, etc. all values should be dynamically pulled from the objects.
+    * This is important, so I will repeat again: Never hard code any results such as mean values, significant values, sample sizes, etc. all values should be dynamically pulled from the objects.
+3. Data Integrity & Assumptions
+* The "No Assumptions" Rule: No assumptions. Never 'assume'. If you think you need to assume we have failed when it comes to data structure/data. Write Rcode to check these things.
+    * Repeated for maximum exposure: No assumptions. Never 'assume'. If you think you need to assume we have failed when it comes to data structure/data. Write Rcode to check these things.
+4. Workflow: Exploratory Data Analysis (EDA)
+* Exhaustive Exploration: EDA (plot out dependent variable, independent variables, etc.). Explore the data in an exhaustive way! There is never too much EDA. The data should be maximally investigated to explore all the nooks and crannies.
+* Missing Data: Check for missing data during EDA. If missingness is significant (>5%), prioritize multiple imputation (e.g., mice package) or full-information maximum likelihood (FIML) over listwise deletion, unless instructed otherwise.
+* Object Verification: When making any objects that are transformed (new columns, updated values, etc.) make sure to print out the newly made object so columns/values/rows etc. are made as expected.
+    * If not all columns are printed, use a print statement with width = Inf to see all column values.
+    * If the dataset is too large for this to be practical, then inspect new objects using glimpse() or str() to verify structure, and head()/tail() to verify values.
+    * Context: Always make sure you have all the context you need from object print outs, especially if columns contain information that changes downstream tasks (such as a column hidden that contains p values, effect sizes, etc.).
+5. Workflow: Model Building
+* Theory-Driven: Models should ALWAYS be fit in an Incremental, theory-driven model building way. Start simple (one or two predictors, then add more as assumptions are met).
+* Pre-Model Steps:
+    * After deciding the model formation, plot the dependent variable one more time.
+    * Ensure categorical variables are converted to factors and the reference level is set intentionally (theory-driven) before modeling.
+    * Use the EDA plot to check for outliers and bounds, not strictly for normality. Plot the DV in a plot before making any model.
+* Family Selection: Choose the family based on the nature of the DV's data:
+    * Is it a count? Use Poisson/NegBin.
+    * Is it binary? Use Binomial.
+    * Is it continuous and bounded? Use Beta.
+    * Ambiguity: If multiple families could fit (e.g., Poisson vs NegBin), justify choice using dispersion checks / posterior predictive checks / residual simulation.
+* Collinearity: Check for Multicollinearity using VIF (Variance Inflation Factor). If VIF > 5 (or 10), address it.
+6. Workflow: Diagnostics & Validation
+* The "Before Summary" Rule: Once the model is made but before looking at summary check, check assumptions with at least 3 methods (i.e., residuals, QQ, etc.). This varies dependent on what type of model distribution is used.
+    * Only If they pass should you look at summary output.
+* Assumption Handling: Assess assumptions. If minor violations exist, note them and discuss limitations or switch to robust standard errors/bootstrapping. If major violations exist, revise the model family/link.
+* Post-Hoc Analysis: If summary output is significant then make effects plots with the effects() and/or emmeans() package, if applicable. Do this for all models.
+* Predictive Validation: ANY PREDICTIVE model MUST have validation checked too (cross fold validation, Precision, Recall, F1, AUC, etc.).
+7. Workflow: Model Criteria & Comparisons
+Always check model criteria:
+* Use LR tests for nested frequentist models.
+* Use AIC/BIC for comparable likelihood-based models (same response, same data, same likelihood assumptions).
+* Bayesian: Add LOO/WAIC + Bayes factors (where appropriate) + prior sensitivity.
+8. Output & Reporting
+* File Management: Save models as .rds files so they load faster the next run.
+* Tables: Include kable tables with all results and comparing across models. Use the broom package (tidy/glance) to extract model results into dataframes before passing them to kable.
+* Metrics:
+    * Always report effect sizes + uncertainty (CI/CrI), not just p-values, etc.
+    * Include model formula, family/link, N used, and model comparison table.
+* Multiple Comparisons: For any time there are multiple tests apply an appropriate correction for multiple comparisons (e.g., FDR for exploratory, Holm for strict control).
+9. Bayesian Specifics
+* Use the same workflow as above.
+* Assumption Checks: Make sure to plot priors, pp checks, fit diagnostics, posterior probabilities, ROPEs or Bayes' Factors for weak, medium strong priors, and model comparisons.
+
